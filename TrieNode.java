@@ -69,12 +69,20 @@ public class Trie {
     // Driver 
     public static void main(String args[]) 
     { 
-	// Input keys (use only 'a' through 'z' and lower case) 
-	String keys[] = {"the", "a", "there", "answer", "any", 
-			 "by", "bye", "their"}; 
-	
+	try {
+	    File inputFile = new File("input.txt");
+	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	    Document doc = dBuilder.parse(inputFile);
+	    doc.getDocumentElement().normalize();
+	    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+	    //NodeList nList = doc.getElementsByTagName("student");
+	    //System.out.println("----------------------------");
+        } catch (Exception e) {
+            e.printStackTrace();
+	}
 	String output[] = {"Not present in trie", "Present in trie"}; 
-	
+    
 	
 	root = new TrieNode(); 
     }
