@@ -1,70 +1,106 @@
-import java.io.*;
-import java.util.*;
-package invertindex;
+package invertedIndex;
 
-class Index {
-    Map<Integer,String> sources;
-    HashMap<String, HashSet<Integer>> index;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.zip.ZipInputStream;
+import java.util.ArrayList; 
 
-    Index(){
-        sources = new HashMap<Integer,String>();
-        index = new HashMap<String, HashSet<Integer>>();
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+
+public class InvertedIndex {
+    private static final String ELEMENT_ARTICLE = "PubmedArticle";
+    private static final String ELEMENT_TITLE = "ArticleTitle";
+    private static final String ELEMENT_ID = "PMID";
+
+    private final String file;
+    private final XMLInputFactory factory = XMLInputFactory.newInstance();
+    private final List<PubmedArticles> articles;
+    
+    public final Hashtable <String, ArrayList<Integer>> KeywordsTable = new Hashtable <String, ArrayList<Integer>>();
+   
+    public InvertedIndex(final String file, final List<PubmedArticles> articles) {
+        this.file = file;
+        this.articles = articles;
     }
-    public void buildIndex(String[] files){
-        int i = 0;
-        for(String fileName:files){
 
+    public void parse() throws IOException, XMLStreamException {
+        try(final InputStream stream = this.getClass().getResourceAsStream(file)) {
+		try(final ZipInputStream zip = new ZipInputStream(stream)) {
+			final XMLEventReader reader = factory.createXMLEventReader(zip);
+			while (reader.hasNext()) {
+			    final XMLEvent event = reader.nextEvent();
+			    if (event.isStartElement() && event.asStartElement().getName()
+				.getLocalPart().equals(ELEMENT_ARTICLE)) {
+				parseArticle(reader);
+			    }
+			}
+		    }
+	    }
+    }
 
-            try(BufferedReader file = new BufferedReader(new FileReader(fileName)))
-                   {
-                       sources.put(i,fileName);
-                       String ln;
-                       while( (ln = file.readLine()) !=null) {
-                           String[] words = ln.split("\\W+");
-                           for(String word:words){
-                               word = word.toLowerCase();
-                               if (!index.containsKey(word))
-                                   index.put(word, new HashSet<Integer>());
-                               index.get(word).add(i);
-                           }
-                       }
-                   } catch (IOException e){
-                System.out.println("File "+fileName+" not found. Skip it");
+    private void parseArticle(final XMLEventReader reader) throws XMLStreamException {
+        String name = null;
+        String id = null;
+        String indexID = 0;
+        while (reader.hasNext()) {
+            final XMLEvent event = reader.nextEvent();
+            if (event.isEndElement() && event.asEndElement().getName().getLocalPart().equals(ELEMENT_ARTICLE)) {
+                return;
             }
-	    i++;
+            if (event.isStartElement()) {
+                final StartElement element = event.asStartElement();
+                final String elementName = element.getName().getLocalPart();
+                switch (elementName) {
+		case ELEMENT_TITLE:
+		    name = reader.getElementText();
+		    break;
+		case ELEMENT_ID:
+		    id = reader.getElementText();
+                    indexID++;
+		    break;
+                }
+            }
         }
-
+        final PubmedArticles article = new PubmedArticles(id, indexID);
+        articles.add(article);
+        createIndex(name, indexID);
     }
-    public void find(String phrase){
-        String[] words = phrase.split("\\W+");
-        HashSet<Integer> res = new HashSet<Integer>(index.get(words[0].toLowerCase()));
-        for(String word: words){
-            res.retainAll(index.get(word));
-        }
 
-        if(res.size()==0) {
-            System.out.println("Not found");
-            return;
+    /* This function takes the title element from a Pubmed Article and breaks it into keywords.
+       If the keyword is a stop word, then it is skipped.
+       If the keyword is not in the hashtable yet, then a new arraylist is created for that word,
+       and the keyword is put into the hashtable.
+       The indexID is then appended to an array for that keyword called docArray
+    */
+    public void createIndex(String titleElement, int ID){
+        String [] keywords = element.split("\\W+");
+        for (String word : keywords) {
+            word = word.toLowerCase();
+            //check for stopwords
+            if (stopwords.contains(word)) {
+	        continue;
+            } 
+           
+            String docArray = word + "List";
+            
+            if (KeyWordsTable.containsKey(word)) {
+                docArray.add(ID);
+	    } else {
+                ArrayList<Integer> docArray = new ArrayList<Integer>();
+                docArray.add(ID);
+                KeyWordsTable.put(word, docArray);
+	    }
         }
-        System.out.println("Found in: ");
-        for(int num : res){
-            System.out.println("\t"+sources.get(num));
-        }
-
     }
-}
-public class InvertedIndexTest {
-
-
-    public static void main(String args[]) throws IOException{
-        Index index = new Index();
-        index.buildIndex(new String[]{"pubmed19n0002.xml", "pubmed19n0013.xml", "pubmed19n0023.xml"});
-
-        System.out.println("Print search phrase: ");
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        String phrase = in.readLine();
-
-        index.find(phrase);
-
+    public void find(String word) {
+        String docArray = word + "List";
+        if (KeyWordsTable.containsKey(word)) {
+	    System.out.println("The word" + word + " is in the documents: " + docArray + ".");
+	}
     }
 }
