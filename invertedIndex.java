@@ -1,5 +1,7 @@
 package invertedIndex;
 
+import java.util.*;
+import java.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -19,11 +21,36 @@ public class InvertedIndex {
 
     private final String file;
     private final XMLInputFactory factory = XMLInputFactory.newInstance();
-    private final List<PubmedArticles> articles;
+    private final ArrayList<Integer> articles;
     
-    public final Hashtable <String, ArrayList<Integer>> KeywordsTable = new Hashtable <String, ArrayList<Integer>>();
+    private final Hashtable <String, ArrayList<Integer>> KeyWordsTable = new Hashtable <String, ArrayList<Integer>>();
    
-    public InvertedIndex(final String file, final List<PubmedArticles> articles) {
+    private final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
+					   "and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
+					   "before", "being", "below", "between", "both", "but", "by", "can", "couldn",
+					   "couldn't", "d", "did", "didn", "didn't", "do", "does", "doesn", "doesn't",
+					   "doing", "don", "don't", "down", "during", "each", "few", "for", "from",
+					   "further", "had", "hadn", "hadn't", "has", "hasn", "hasn't", "have",
+					   "haven", "haven't", "having", "he", "her", "here", "hers", "herself",
+					   "him", "himself", "his", "how", "i", "if", "in", "into", "is", "isn",
+					   "isn't", "it", "it's", "its", "itself", "just", "ll", "m", "ma", "me",
+					   "mightn", "mightn't", "more", "most", "mustn", "mustn't", "my", "myself",
+					   "needn", "needn't", "no", "nor", "not", "now", "o", "of", "off", "on",
+					   "once", "only", "or", "other", "our", "ours", "ourselves", "out", "over",
+					   "own", "re", "s", "same", "shan", "shan't", "she", "she's", "should",
+					   "should've", "shouldn", "shouldn't", "so", "some", "such", "t", "than",
+					   "that", "that'll", "the", "their", "theirs", "them", "themselves", "then",
+					   "there", "these", "they", "this", "those", "through", "to", "too", "under",
+					   "until", "up", "ve", "very", "was", "wasn", "wasn't", "we", "were", "weren",
+					   "weren't", "what", "when", "where", "which", "while", "who", "whom", "why",
+					   "will", "with", "won", "won't", "wouldn", "wouldn't", "y", "you", "you'd",
+					   "you'll", "you're", "you've", "your", "yours", "yourself", "yourselves",
+					   "could", "he'd", "he'll", "he's", "here's", "how's", "i'd", "i'll", "i'm",
+					   "i've", "let's", "ought", "she'd", "she'll", "that's", "there's", "they'd",
+					   "they'll", "they're", "they've", "we'd", "we'll", "we're", "we've",
+					   "what's", "when's", "where's", "who's", "why's", "would");
+    
+    public InvertedIndex(final String file, final ArrayList<Integer> articles) {
         this.file = file;
         this.articles = articles;
     }
@@ -46,7 +73,7 @@ public class InvertedIndex {
     private void parseArticle(final XMLEventReader reader) throws XMLStreamException {
         String name = null;
         String id = null;
-        String indexID = 0;
+        Integer indexID = 0;
         while (reader.hasNext()) {
             final XMLEvent event = reader.nextEvent();
             if (event.isEndElement() && event.asEndElement().getName().getLocalPart().equals(ELEMENT_ARTICLE)) {
@@ -66,8 +93,8 @@ public class InvertedIndex {
                 }
             }
         }
-        final PubmedArticles article = new PubmedArticles(id, indexID);
-        articles.add(article);
+        //final ArrayList<ArrayList<Integer>> articles = new ArrayList(ArrayList[id, indexID]);
+        //articles.add(article);
         createIndex(name, indexID);
     }
 
@@ -78,7 +105,7 @@ public class InvertedIndex {
        The indexID is then appended to an array for that keyword called docArray
     */
     public void createIndex(String titleElement, int ID){
-        String [] keywords = element.split("\\W+");
+        String [] keywords = titleElement.split("\\W+");
         for (String word : keywords) {
             word = word.toLowerCase();
             //check for stopwords
@@ -86,14 +113,21 @@ public class InvertedIndex {
 	        continue;
             } 
            
-            String docArray = word + "List";
-            
             if (KeyWordsTable.containsKey(word)) {
-                docArray.add(ID);
+                keyToDocList = KeyWordsTabe.get(word);
+                length = keyToDocList.size();
+                for (int i = 0; i < length; i++) {
+                    pair = keyToDocList.get(i);
+                    if (pair.getKey() == ID){
+                        
+		    } 
+		}
+                // append to array
+                // writeback to table
 	    } else {
-                ArrayList<Integer> docArray = new ArrayList<Integer>();
-                docArray.add(ID);
-                KeyWordsTable.put(word, docArray);
+                List<Pair<Integer, Integer>> docList = new ArrayList<>();
+                docList.add(ID, 1);
+                KeyWordsTable.put(word, docList);
 	    }
         }
     }
