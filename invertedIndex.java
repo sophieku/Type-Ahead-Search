@@ -18,12 +18,15 @@ public class InvertedIndex {
     private static final String ELEMENT_ARTICLE = "PubmedArticle";
     private static final String ELEMENT_TITLE = "ArticleTitle";
     private static final String ELEMENT_ID = "PMID";
+    private final Int length;
+    //private final List<    
+
 
     private final String file;
     private final XMLInputFactory factory = XMLInputFactory.newInstance();
     private final ArrayList<Integer> articles;
     
-    private final Hashtable <String, ArrayList<Integer>> KeyWordsTable = new Hashtable <String, ArrayList<Integer>>();
+    public final Hashtable <String, ArrayList<Integer>> KeyWordsTable = new Hashtable <String, ArrayList<Integer>>();
    
     private final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
 					   "and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
@@ -69,7 +72,8 @@ public class InvertedIndex {
 		    }
 	    }
     }
-
+    
+    // This function reads in and XML zip and parses through the Titles and Id's
     private void parseArticle(final XMLEventReader reader) throws XMLStreamException {
         String name = null;
         String id = null;
@@ -114,27 +118,29 @@ public class InvertedIndex {
             } 
            
             if (KeyWordsTable.containsKey(word)) {
-                keyToDocList = KeyWordsTabe.get(word);
+                keyToDocList = KeyWordsTable.get(word);
                 length = keyToDocList.size();
                 for (int i = 0; i < length; i++) {
-                    pair = keyToDocList.get(i);
+                    private final pair = keyToDocList.get(i);
                     if (pair.getKey() == ID){
-                        
+                        pair.getValue()++;
+                        return;
 		    } 
 		}
+                keyToDocList.add(ID, 1);
+                
                 // append to array
                 // writeback to table
 	    } else {
-                List<Pair<Integer, Integer>> docList = new ArrayList<>();
+                private final List<Pair<Integer,Integer>> docList = new ArrayList<>(); 
                 docList.add(ID, 1);
                 KeyWordsTable.put(word, docList);
 	    }
         }
     }
     public void find(String word) {
-        String docArray = word + "List";
         if (KeyWordsTable.containsKey(word)) {
-	    System.out.println("The word" + word + " is in the documents: " + docArray + ".");
+	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + ".");
 	}
     }
 }
