@@ -108,7 +108,7 @@ public class InvertedIndex {
        and the keyword is put into the hashtable.
        The indexID is then appended to an array for that keyword called docArray
     */
-    public void createIndex(String titleElement, int ID){
+    public static void createIndex(String titleElement, int ID){
         String [] keywords = titleElement.split("\\W+");
         for (String word : keywords) {
             word = word.toLowerCase();
@@ -116,29 +116,29 @@ public class InvertedIndex {
             if (stopwords.contains(word)) {
 	        continue;
             } 
-           
+            // case where the keyword is found in the hashtable. If the word is already in the document, increase count and return
             if (KeyWordsTable.containsKey(word)) {
                 keyToDocList = KeyWordsTable.get(word);
                 length = keyToDocList.size();
                 for (int i = 0; i < length; i++) {
-                    private final pair = keyToDocList.get(i);
+                    Pair <Integer,Integer> aPair = keyToDocList.get(i); 
                     if (pair.getKey() == ID){
                         pair.getValue()++;
                         return;
 		    } 
 		}
-                keyToDocList.add(ID, 1);
+                keyToDocList.add(new Pair<Integer, Integer> (ID, 1));
                 
                 // append to array
                 // writeback to table
 	    } else {
-                private final List<Pair<Integer,Integer>> docList = new ArrayList<>(); 
-                docList.add(ID, 1);
+                private final List<Pair<Integer,Integer>> docList = new ArrayList<>(); // array list for creating keeping track of document ID and # times word appears in doc
+                docList.add(new Pair<Integer, Integer> (ID, 1));
                 KeyWordsTable.put(word, docList);
 	    }
         }
     }
-    public void find(String word) {
+    public static void find(String word) {
         if (KeyWordsTable.containsKey(word)) {
 	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + ".");
 	}
