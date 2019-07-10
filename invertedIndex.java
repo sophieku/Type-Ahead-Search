@@ -138,9 +138,10 @@ public class InvertedIndex {
 	    }
         }
     }
-    public static void find(String word) {
+    public static List find(String word) {
         if (KeyWordsTable.containsKey(word)) {
-	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + ".");
+	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + "."); // for debugging
+	    return KeyWordsTable.get(word);
 	}
     }
 }
