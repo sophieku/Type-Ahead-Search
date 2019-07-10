@@ -1,4 +1,5 @@
-
+import invertedIndex     // make sure can import packages
+import TrieNode          // make sure can import packages
 import java.util.*;
 import java.io.*;
 
@@ -34,7 +35,7 @@ public class KeywordSearch {
 	return i+1;
     }
 
-    public List Union(List l1, List l2) {
+    public List union(List l1, List l2) {
          List finalList;
         
 
@@ -60,6 +61,20 @@ public class KeywordSearch {
             
 	}
     }
+
+    public List intersection(List l1, List l2) {
+       while (l1[i] != null && l2[j] != null) {
+            if (l1[i].getKey() == l2[j].getKey()) {
+                finalList[i] = l1[i].getKey();
+		++i;
+		++j;
+	    } else if (l1[i].getKey()< l2[j].getKey() ) { 
+		++i;
+	    } else {
+		++j;
+	    }	
+	}
+    }
     
     public static void main {
         // get input word from user, save as searchString
@@ -67,13 +82,21 @@ public class KeywordSearch {
         // find children trienodes that have isEndOfWord == true and save in List
 	// parse through list
 	// List trieChildrenList = find(word in list);
-
-           
+	quickSort(trieChildrenList, 0, trieChildrenList.length());
+	
+        // union all completed nodes into one sorted list (union function sorts them)
+	List unionedNodesList = new ArrayList();
+	while (trieChildrenList[i+1] != null) {
+            if (i == 0) {
+		unionedNodesList = trieChildrenList[i];
+            }
+            unionedNodesList = union(unionedNodesList, trieChildrenList[i+1]);
+            ++i;
+	}
+	     
 	//Intersection block of keyword
-	int i, j = 0;
-   while (l1.length() != null && l2.length() != null) {
-
-	     }
+	//while 
+		
     }
 
 
