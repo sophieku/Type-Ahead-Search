@@ -2,6 +2,7 @@ import invertedIndex     // make sure can import packages
 import TrieNode          // make sure can import packages
 import java.util.*;
 import java.io.*;
+import java.lang.*;
 
 public class KeywordSearch {
 
@@ -76,15 +77,35 @@ public class KeywordSearch {
 	}
     }
     
+    // function that takes in a term t and document d, and returns the score using tf*idf
+    public float score(String t, Integer d) {
+	float tf, idf = 0.0;
+	Pair<Integer, Integer> p = KeyWordsTable.get(t);
+
+	//finding tf
+        if (p.getValue() > 0) {
+	    tf =  1 + Math.log10(p.getValue())
+	} else {
+            tf =  0;
+	}
+
+	//finding idf
+	idf = Math.log10((docId) / (1 + p.getValue()); //find out how to get largest doc ID from invertedIndex.java 
+	
+    }
+
+    
+    
     public static void main {
         // get input word from user, save as searchString
         // parse string into keywords
-        // find children trienodes that have isEndOfWord == true and save in List
-	// parse through list
+        // find children trienodes that have isEndOfWord == true and save in matchingKeywordsList
+	// parse through matchingKeywordsList
 	// List trieChildrenList = find(word in list);
 	quickSort(trieChildrenList, 0, trieChildrenList.length());
 	
         // union all completed nodes into one sorted list (union function sorts them)
+	// for loop to union all keywords?
 	List unionedNodesList = new ArrayList();
 	while (trieChildrenList[i+1] != null) {
             if (i == 0) {
@@ -94,8 +115,8 @@ public class KeywordSearch {
             ++i;
 	}
 	     
-	//Intersection block of keyword
-	//while 
+	//Intersect unioned lists
+	while 
 		
     }
 
