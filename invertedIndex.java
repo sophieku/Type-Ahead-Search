@@ -28,7 +28,7 @@ public class InvertedIndex {
     
     public final Hashtable <String, ArrayList<Integer>> KeyWordsTable = new Hashtable <String, ArrayList<Integer>>();
    
-    private final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
+     private final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
 					   "and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
 					   "before", "being", "below", "between", "both", "but", "by", "can", "couldn",
 					   "couldn't", "d", "did", "didn", "didn't", "do", "does", "doesn", "doesn't",
@@ -138,6 +138,7 @@ public class InvertedIndex {
 	    }
         }
     }
+    
     public static List find(String word) {
         if (KeyWordsTable.containsKey(word)) {
 	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + "."); // for debugging

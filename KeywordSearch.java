@@ -70,7 +70,7 @@ public class KeywordSearch {
 		++i;
 		++j;
 	    } else if (l1[i].getKey()< l2[j].getKey() ) { 
-		++i;
+ 		++i;
 	    } else {
 		++j;
 	    }	
