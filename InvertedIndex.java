@@ -4,21 +4,21 @@ import java.util.*;
 
 import java.io.*;
 import java.util.List;
-import java.util.zip.ZipInputStream;
+//import java.util.zip.ZipInputStream;
 import java.util.ArrayList; 
 
 
-import javax.xml.stream.XMLEventReader;
+//import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+//import javax.xml.stream.events.StartElement;
+//import javax.xml.stream.events.XMLEvent;
 
 public class InvertedIndex {
-	private static final String ELEMENT_ARTICLE = "PubmedArticle";
+/*	private static final String ELEMENT_ARTICLE = "PubmedArticle";
 	private static final String ELEMENT_TITLE = "ArticleTitle";
 	private static final String ELEMENT_ID = "PMID";   
-
+*/
 
 	//private final static String file;  // = pubmed19n0023.xml;
 	private final XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -139,26 +139,29 @@ public class InvertedIndex {
 			if (stopwords.contains(word)) {
 				continue;
 			} 
-			// case where the keyword is found in the hashtable. If the word is already in the document, increase count and return
+			// case where the keyword is found in the hash table. If the word is already in the document, increase count and return
 			if (KeyWordsTable.containsKey(word)) {
 				List<Pair <Integer, Integer> >  keyToDocList = KeyWordsTable.get(word);
 				int length = keyToDocList.size();
+				int freq = 0;
 				for (int i = 0; i < length; i++) {
 					Pair<Integer,Integer> aPair = keyToDocList.get(i);
 					int pairDocID = aPair.getFirst(); 
 					if (pairDocID == ID){
-						int freq = aPair.getSecond();
+						freq = aPair.getSecond();
                         freq++;       
                         Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
                         keyToDocList.set(i, returnPair);
-						return;
+						break;
 					} 
 				}
-				keyToDocList.add(new Pair<Integer, Integer> (ID, 1));
-
+				if (freq == 0) {
+					keyToDocList.add(new Pair<Integer, Integer> (ID, 1));
+				}
 				// append to array
 				// writeback to table
 			} else {
+				//System.out.println("creating fresh table value");
 				List<Pair<Integer,Integer>> docList = new ArrayList<>(); // array list for creating keeping track of document ID and # times word appears in doc
 				docList.add(new Pair<Integer, Integer> (ID, 1));
 				KeyWordsTable.put(word, docList);
@@ -169,7 +172,12 @@ public class InvertedIndex {
 	public void find(String word) {
 		
 		if (KeyWordsTable.containsKey(word)) {
-			System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + "."); // for debugging
+			System.out.println("The word " + word + " is in the documents: "); // for debugging
+			List<Pair <Integer, Integer> > docs = KeyWordsTable.get(word);
+		     for (int idx = 0; idx <= docs.size() - 1; idx++) {
+		        System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + "), ");
+		     }
+		     System.out.println();
 		}
 	}
 	
@@ -181,9 +189,10 @@ public class InvertedIndex {
 			 str = itr.next();
 		     System.out.println("Key: "+str+" & Value: ");
 		     List<Pair <Integer, Integer> > docs = KeyWordsTable.get(str);
-		     for (int idx = 0; idx < docs.size() - 2; ++idx) {
-		        System.out.println(docs.get(idx) + ", " + docs.get(idx + 1));
+		     for (int idx = 0; idx <= docs.size() - 1; idx++) {
+		        System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + ")");
 		     }
+		     System.out.println();
 		}
 	}
 
@@ -200,7 +209,7 @@ public class InvertedIndex {
 		System.out.println("Search the Medline Database: "); 
 		s = sc.nextLine();  
 		i.find(s);
-		i.printTable();
+		//i.printTable();
 		sc.close();
 
 	}
