@@ -14,18 +14,20 @@ import javax.xml.stream.XMLStreamException;
 //import javax.xml.stream.events.StartElement;
 //import javax.xml.stream.events.XMLEvent;
 
+
+
 public class InvertedIndex {
-/*	private static final String ELEMENT_ARTICLE = "PubmedArticle";
+	/*	private static final String ELEMENT_ARTICLE = "PubmedArticle";
 	private static final String ELEMENT_TITLE = "ArticleTitle";
 	private static final String ELEMENT_ID = "PMID";   
-*/
+	 */
 
 	//private final static String file;  // = pubmed19n0023.xml;
-	private final XMLInputFactory factory = XMLInputFactory.newInstance();
-	
+	//private final XMLInputFactory factory = XMLInputFactory.newInstance();
+
 
 	public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
-	
+
 	public static final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
 			"and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
 			"before", "being", "below", "between", "both", "but", "by", "can", "couldn",
@@ -56,22 +58,22 @@ public class InvertedIndex {
 		this.articles = articles;
 	} */
 	public InvertedIndex() {
-		
+
 	}
 	public void parse() throws FileNotFoundException, IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader("pubmed19n0013.txt"))) {
-		    String line;
-		    int ID = 0;
-		    ArrayList<String> articleTitleIndexToID = new ArrayList<String>();
-		    System.out.println("Inside parse, and before while loop");
-		    while ((line = br.readLine()) != null) {
-		       createIndex(line, ID);
-		       articleTitleIndexToID.add(line);
-		       ID++;
-		    }
+			String line;
+			int ID = 0;
+			ArrayList<String> articleTitleIndexToID = new ArrayList<String>();
+			System.out.println("Inside parse, and before while loop");
+			while ((line = br.readLine()) != null) {
+				createIndex(line, ID);
+				articleTitleIndexToID.add(line);
+				ID++;
+			}
 		}
 	}
-/*
+	/*
 	public void parse() throws IOException, XMLStreamException {
 		try(final InputStream stream = this.getClass().getResourceAsStream("pubmed19n0023.xml")) {
 			try(final ZipInputStream zip = new ZipInputStream(stream)) {
@@ -86,7 +88,7 @@ public class InvertedIndex {
 			} catch (XMLStreamException e) {
 				System.err.println("XMLStreamException");
 			}
-			
+
 		} catch (IOException e) {
 			System.err.println("IOException");
 
@@ -122,7 +124,7 @@ public class InvertedIndex {
 		//articles.add(article);
 		createIndex(name, indexID);
 	}
-	*/
+	 */
 
 	/* This function takes the title element from a Pubmed Article and breaks it into keywords.
        If the keyword is a stop word, then it is skipped.
@@ -149,9 +151,9 @@ public class InvertedIndex {
 					int pairDocID = aPair.getFirst(); 
 					if (pairDocID == ID){
 						freq = aPair.getSecond();
-                        freq++;       
-                        Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
-                        keyToDocList.set(i, returnPair);
+						freq++;       
+						Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
+						keyToDocList.set(i, returnPair);
 						break;
 					} 
 				}
@@ -170,40 +172,40 @@ public class InvertedIndex {
 	}
 
 	public void find(String word) {
-		
+
 		if (KeyWordsTable.containsKey(word)) {
 			System.out.println("The word " + word + " is in the documents: "); // for debugging
 			List<Pair <Integer, Integer> > docs = KeyWordsTable.get(word);
-		     for (int idx = 0; idx <= docs.size() - 1; idx++) {
-		        System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + "), ");
-		     }
-		     System.out.println();
+			for (int idx = 0; idx <= docs.size() - 1; idx++) {
+				System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + "), ");
+			}
+			System.out.println();
 		}
 	}
-	
+
 	public void printTable() {
 		String str;
 		Set<String> keys = KeyWordsTable.keySet();
 		Iterator<String> itr = keys.iterator();
 		while (itr.hasNext()) {
-			 str = itr.next();
-		     System.out.println("Key: "+str+" & Value: ");
-		     List<Pair <Integer, Integer> > docs = KeyWordsTable.get(str);
-		     for (int idx = 0; idx <= docs.size() - 1; idx++) {
-		        System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + ")");
-		     }
-		     System.out.println();
+			str = itr.next();
+			System.out.println("Key: "+str+" & Value: ");
+			List<Pair <Integer, Integer> > docs = KeyWordsTable.get(str);
+			for (int idx = 0; idx <= docs.size() - 1; idx++) {
+				System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + ")");
+			}
+			System.out.println();
 		}
 	}
 
 
 	public static void main(String[] args) throws IOException, XMLStreamException {
-		
+
 		//String file = null;
 		InvertedIndex i = new InvertedIndex();
-		
+
 		i.parse();
-		
+
 		String s; 
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Search the Medline Database: "); 
@@ -212,10 +214,90 @@ public class InvertedIndex {
 		//i.printTable();
 		sc.close();
 
+		//Trie t = new Trie();
+		String str;
+		Set<String> keys = i.KeyWordsTable.keySet();
+		Iterator<String> itr = keys.iterator();
+		while (itr.hasNext()) {
+			str = itr.next();
+			Trie.insert(str);
+
+		}
+
 	}
 
-}
+	class Trie { 
+		public Trie() {
 
+		}
+
+		// Alphabet size (# of symbols) 
+		static final int ALPHABET_SIZE = 26; 
+
+		// trie node 
+		static class TrieNode 
+		{ 
+			TrieNode[] children = new TrieNode[ALPHABET_SIZE]; 
+
+			// isEndOfWord is true if the node represents 
+			// end of a word 
+			boolean isEndOfWord; 
+
+			TrieNode(){ 
+				isEndOfWord = false; 
+				for (int i = 0; i < ALPHABET_SIZE; i++) 
+					children[i] = null; 
+			} 
+		}; 
+
+		static TrieNode root; 
+
+		// If not present, inserts key into trie 
+		// If the key is prefix of trie node, 
+		// just marks leaf node 
+		public void insert(String key) 
+		{ 
+			int level; 
+			int length = key.length(); 
+			int index; 
+
+			TrieNode pCrawl = root; 
+
+			for (level = 0; level < length; level++) 
+			{ 
+				index = key.charAt(level) - 'a'; 
+				if (pCrawl.children[index] == null) 
+					pCrawl.children[index] = new TrieNode(); 
+
+				pCrawl = pCrawl.children[index]; 
+			} 
+
+			// mark last node as leaf 
+			pCrawl.isEndOfWord = true; 
+		} 
+
+		// Returns true if key presents in trie, else false 
+		public boolean search(String key) 
+		{ 
+			int level; 
+			int length = key.length(); 
+			int index; 
+			TrieNode pCrawl = root; 
+
+			for (level = 0; level < length; level++) 
+			{ 
+				index = key.charAt(level) - 'a'; 
+
+				if (pCrawl.children[index] == null) 
+					return false; 
+
+				pCrawl = pCrawl.children[index]; 
+			} 
+
+			return (pCrawl != null && pCrawl.isEndOfWord); 
+		} 
+	}
+}
 class Pair<K, V> {
 
 	private final K element0;
