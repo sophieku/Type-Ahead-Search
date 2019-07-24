@@ -1,9 +1,8 @@
 //package InvertedIndex;
 
 import java.util.*;
+
 import java.io.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 import java.util.ArrayList; 
@@ -21,12 +20,12 @@ public class InvertedIndex {
 	private static final String ELEMENT_ID = "PMID";   
 
 
-	private final String file;  // = pubmed19n0023.xml;
+	//private final static String file;  // = pubmed19n0023.xml;
 	private final XMLInputFactory factory = XMLInputFactory.newInstance();
-	// private final ArrayList<Integer> articles; 
+	
 
 	public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
-	//making a change. this was done in eclipse 
+	
 	public static final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
 			"and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
 			"before", "being", "below", "between", "both", "but", "by", "can", "couldn",
@@ -52,13 +51,29 @@ public class InvertedIndex {
 			"they'll", "they're", "they've", "we'd", "we'll", "we're", "we've",
 			"what's", "when's", "where's", "who's", "why's", "would");
 
-	public InvertedIndex(final String file, final ArrayList<Integer> articles) {
+	/*public InvertedIndex(final String file, final ArrayList<Integer> articles) {
 		this.file = file;
 		this.articles = articles;
+	} */
+	public InvertedIndex() {
+		
 	}
-
+	public void parse() throws FileNotFoundException, IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader("pubmed19n0013.txt"))) {
+		    String line;
+		    int ID = 0;
+		    ArrayList<String> articleTitleIndexToID = new ArrayList<String>();
+		    System.out.println("Inside parse, and before while loop");
+		    while ((line = br.readLine()) != null) {
+		       createIndex(line, ID);
+		       articleTitleIndexToID.add(line);
+		       ID++;
+		    }
+		}
+	}
+/*
 	public void parse() throws IOException, XMLStreamException {
-		try(final InputStream stream = this.getClass().getResourceAsStream(file)) {
+		try(final InputStream stream = this.getClass().getResourceAsStream("pubmed19n0023.xml")) {
 			try(final ZipInputStream zip = new ZipInputStream(stream)) {
 				final XMLEventReader reader = factory.createXMLEventReader(zip);
 				while (reader.hasNext()) {
@@ -68,12 +83,19 @@ public class InvertedIndex {
 						parseArticle(reader);
 					}
 				}
+			} catch (XMLStreamException e) {
+				System.err.println("XMLStreamException");
 			}
+			
+		} catch (IOException e) {
+			System.err.println("IOException");
+
 		}
 	}
 
 	// This function reads in an article from the XML zip and parses through the Titles and Id's
 	private void parseArticle(final XMLEventReader reader) throws XMLStreamException {
+		System.out.println("Parsing Articles");
 		String name = null;
 		String id = null;
 		Integer indexID = 0;
@@ -100,6 +122,7 @@ public class InvertedIndex {
 		//articles.add(article);
 		createIndex(name, indexID);
 	}
+	*/
 
 	/* This function takes the title element from a Pubmed Article and breaks it into keywords.
        If the keyword is a stop word, then it is skipped.
@@ -124,11 +147,10 @@ public class InvertedIndex {
 					Pair<Integer,Integer> aPair = keyToDocList.get(i);
 					int pairDocID = aPair.getFirst(); 
 					if (pairDocID == ID){
-						/*int freq = aPair.getSecond();
-                        freq++;       FIX LATER FOR INCREMENTING COUNT OF FREQUENCY************************************************
+						int freq = aPair.getSecond();
+                        freq++;       
                         Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
-                        keyToDocList.get(i) = returnPair; */
-
+                        keyToDocList.set(i, returnPair);
 						return;
 					} 
 				}
@@ -144,19 +166,42 @@ public class InvertedIndex {
 		}
 	}
 
-	public static void find(String word) {
+	public void find(String word) {
+		
 		if (KeyWordsTable.containsKey(word)) {
 			System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + "."); // for debugging
 		}
 	}
+	
+	public void printTable() {
+		String str;
+		Set<String> keys = KeyWordsTable.keySet();
+		Iterator<String> itr = keys.iterator();
+		while (itr.hasNext()) {
+			 str = itr.next();
+		     System.out.println("Key: "+str+" & Value: ");
+		     List<Pair <Integer, Integer> > docs = KeyWordsTable.get(str);
+		     for (int idx = 0; idx < docs.size() - 2; ++idx) {
+		        System.out.println(docs.get(idx) + ", " + docs.get(idx + 1));
+		     }
+		}
+	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, XMLStreamException {
+		
+		//String file = null;
+		InvertedIndex i = new InvertedIndex();
+		
+		i.parse();
+		
 		String s; 
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Search the Medline Database: "); 
 		s = sc.nextLine();  
-		find(s);
+		i.find(s);
+		i.printTable();
+		sc.close();
 
 	}
 
