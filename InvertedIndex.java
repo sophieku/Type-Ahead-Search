@@ -1,4 +1,4 @@
-package InvertedIndex;
+//package InvertedIndex;
 
 import java.util.*;
 import java.io.*;
@@ -15,15 +15,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-public class invertedIndex {
+public class InvertedIndex {
     private static final String ELEMENT_ARTICLE = "PubmedArticle";
     private static final String ELEMENT_TITLE = "ArticleTitle";
     private static final String ELEMENT_ID = "PMID";   
 
 
-    private final String file;
+    private final String file;  // = pubmed19n0023.xml;
     private final XMLInputFactory factory = XMLInputFactory.newInstance();
-    
+    private final ArrayList<Integer> articles; 
     
     public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
    
@@ -52,7 +52,7 @@ public class invertedIndex {
 					   "they'll", "they're", "they've", "we'd", "we'll", "we're", "we've",
 					   "what's", "when's", "where's", "who's", "why's", "would");
     
-    public invertedIndex(final String file, final ArrayList<Integer> articles) {
+    public InvertedIndex(final String file, final ArrayList<Integer> articles) {
         this.file = file;
         this.articles = articles;
     }
@@ -121,11 +121,14 @@ public class invertedIndex {
                 List<Pair <Integer, Integer> >  keyToDocList = KeyWordsTable.get(word);
                 int length = keyToDocList.size();
                 for (int i = 0; i < length; i++) {
-                    Pair<Integer,Integer> aPair = keyToDocList.get(i); 
-                    if (aPair.getFirst() == ID){
-                        int freq = aPair.getSecond();
-                        freq++;
-                        aPair.getSecond() = freq;
+                    Pair<Integer,Integer> aPair = keyToDocList.get(i);
+                    int pairDocID = aPair.getFirst(); 
+                    if (pairDocID == ID){
+                        /*int freq = aPair.getSecond();
+                        freq++;       FIX LATER FOR INCREMENTING COUNT OF FREQUENCY************************************************
+                        Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
+                        keyToDocList.get(i) = returnPair; */
+
                         return;
 		    } 
 		}
@@ -141,16 +144,19 @@ public class invertedIndex {
         }
     }
     
-    public  List find(String word) {
+    /*public List find(String word) {
         if (KeyWordsTable.containsKey(word)) {
 	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + "."); // for debugging
 	    return KeyWordsTable.get(word);
 	}
     }
-    
-    public static void main() {
-        //
-    }
+    */
+
+    public static void main(String[] args) {
+	if (KeyWordsTable.containsKey("Medicine")) {                                                      
+            System.out.println("The word medicine is in the documents: " + KeyWordsTable.get("Medicine") + "."); // for debugging 
+        }    
+    } 
 }
 
 class Pair<K, V> {
