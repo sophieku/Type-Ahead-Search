@@ -1,4 +1,4 @@
-package invertedIndex;
+package InvertedIndex;
 
 import java.util.*;
 import java.io.*;
@@ -8,27 +8,26 @@ import java.util.List;
 import java.util.zip.ZipInputStream;
 import java.util.ArrayList; 
 
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-public class InvertedIndex {
+public class invertedIndex {
     private static final String ELEMENT_ARTICLE = "PubmedArticle";
     private static final String ELEMENT_TITLE = "ArticleTitle";
-    private static final String ELEMENT_ID = "PMID";
-    private final Int length;
-    //private final List<    
+    private static final String ELEMENT_ID = "PMID";   
 
 
     private final String file;
     private final XMLInputFactory factory = XMLInputFactory.newInstance();
-    private final ArrayList<Integer> articles;
     
-    public final Hashtable <String, ArrayList<Integer>> KeyWordsTable = new Hashtable <String, ArrayList<Integer>>();
+    
+    public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
    
-     private final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
+    public static final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
 					   "and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
 					   "before", "being", "below", "between", "both", "but", "by", "can", "couldn",
 					   "couldn't", "d", "did", "didn", "didn't", "do", "does", "doesn", "doesn't",
@@ -53,7 +52,7 @@ public class InvertedIndex {
 					   "they'll", "they're", "they've", "we'd", "we'll", "we're", "we've",
 					   "what's", "when's", "where's", "who's", "why's", "would");
     
-    public InvertedIndex(final String file, final ArrayList<Integer> articles) {
+    public invertedIndex(final String file, final ArrayList<Integer> articles) {
         this.file = file;
         this.articles = articles;
     }
@@ -73,7 +72,7 @@ public class InvertedIndex {
 	    }
     }
     
-    // This function reads in and XML zip and parses through the Titles and Id's
+    // This function reads in an article from the XML zip and parses through the Titles and Id's
     private void parseArticle(final XMLEventReader reader) throws XMLStreamException {
         String name = null;
         String id = null;
@@ -108,22 +107,25 @@ public class InvertedIndex {
        and the keyword is put into the hashtable.
        The indexID is then appended to an array for that keyword called docArray
     */
-    public static void createIndex(String titleElement, int ID){
+    public void createIndex(String titleElement, int ID){
         String [] keywords = titleElement.split("\\W+");
         for (String word : keywords) {
             word = word.toLowerCase();
-            //check for stopwords
+            
+            //check for stopwords, if current word is a stopword, it is skipped and not added to the index.
             if (stopwords.contains(word)) {
 	        continue;
             } 
             // case where the keyword is found in the hashtable. If the word is already in the document, increase count and return
             if (KeyWordsTable.containsKey(word)) {
-                keyToDocList = KeyWordsTable.get(word);
-                length = keyToDocList.size();
+                List<Pair <Integer, Integer> >  keyToDocList = KeyWordsTable.get(word);
+                int length = keyToDocList.size();
                 for (int i = 0; i < length; i++) {
-                    Pair <Integer,Integer> aPair = keyToDocList.get(i); 
-                    if (pair.getKey() == ID){
-                        pair.getValue()++;
+                    Pair<Integer,Integer> aPair = keyToDocList.get(i); 
+                    if (aPair.getFirst() == ID){
+                        int freq = aPair.getSecond();
+                        freq++;
+                        aPair.getSecond() = freq;
                         return;
 		    } 
 		}
@@ -132,17 +134,45 @@ public class InvertedIndex {
                 // append to array
                 // writeback to table
 	    } else {
-                private final List<Pair<Integer,Integer>> docList = new ArrayList<>(); // array list for creating keeping track of document ID and # times word appears in doc
+                List<Pair<Integer,Integer>> docList = new ArrayList<>(); // array list for creating keeping track of document ID and # times word appears in doc
                 docList.add(new Pair<Integer, Integer> (ID, 1));
                 KeyWordsTable.put(word, docList);
 	    }
         }
     }
     
-    public static List find(String word) {
+    public  List find(String word) {
         if (KeyWordsTable.containsKey(word)) {
 	    System.out.println("The word" + word + " is in the documents: " + KeyWordsTable.get(word) + "."); // for debugging
 	    return KeyWordsTable.get(word);
 	}
     }
+    
+    public static void main() {
+        //
+    }
+}
+
+class Pair<K, V> {
+
+    private final K element0;
+    private final V element1;
+
+    public static <K, V> Pair<K, V> createPair(K element0, V element1) {
+        return new Pair<K, V>(element0, element1);
+    }
+
+    public Pair(K element0, V element1) {
+        this.element0 = element0;
+        this.element1 = element1;
+    }
+
+    public K getFirst() {
+        return element0;
+    }
+
+    public V getSecond() {
+        return element1;
+    }
+
 }
