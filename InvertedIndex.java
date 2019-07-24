@@ -23,10 +23,10 @@ public class InvertedIndex {
 
     private final String file;  // = pubmed19n0023.xml;
     private final XMLInputFactory factory = XMLInputFactory.newInstance();
-    private final ArrayList<Integer> articles; 
+   // private final ArrayList<Integer> articles; 
     
     public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
-   
+    //making a change
     public static final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
 					   "and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
 					   "before", "being", "below", "between", "both", "but", "by", "can", "couldn",
