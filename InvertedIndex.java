@@ -152,7 +152,7 @@ public class InvertedIndex {
 		
 		sc.close();
 		
-		
+		//creating Trie using insert method on the keys of the KeyWordsTable
 		Trie t = new Trie();
 		String str;
 		Set<String> keys = i.KeyWordsTable.keySet();
@@ -161,6 +161,10 @@ public class InvertedIndex {
 			str = itr.next();
 			t.insert(str);
 		}
+		
+		// Testing the Trie
+		System.out.println(t.search(s));
+		
 
 	}
 }
