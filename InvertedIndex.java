@@ -4,26 +4,13 @@ import java.util.*;
 
 import java.io.*;
 import java.util.List;
-//import java.util.zip.ZipInputStream;
+
 import java.util.ArrayList; 
 
-
-//import javax.xml.stream.XMLEventReader;
-//import javax.xml.stream.XMLInputFactory;
-//import javax.xml.stream.XMLStreamException;
-//import javax.xml.stream.events.StartElement;
-//import javax.xml.stream.events.XMLEvent;
 
 
 
 public class InvertedIndex {
-	/*	private static final String ELEMENT_ARTICLE = "PubmedArticle";
-	private static final String ELEMENT_TITLE = "ArticleTitle";
-	private static final String ELEMENT_ID = "PMID";   
-	 */
-
-	//private final static String file;  // = pubmed19n0023.xml;
-	//private final XMLInputFactory factory = XMLInputFactory.newInstance();
 
 
 	public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
@@ -53,10 +40,7 @@ public class InvertedIndex {
 			"they'll", "they're", "they've", "we'd", "we'll", "we're", "we've",
 			"what's", "when's", "where's", "who's", "why's", "would");
 
-	/*public InvertedIndex(final String file, final ArrayList<Integer> articles) {
-		this.file = file;
-		this.articles = articles;
-	} */
+	
 	public InvertedIndex() {
 
 	}
@@ -73,58 +57,7 @@ public class InvertedIndex {
 			}
 		}
 	}
-	/*
-	public void parse() throws IOException, XMLStreamException {
-		try(final InputStream stream = this.getClass().getResourceAsStream("pubmed19n0023.xml")) {
-			try(final ZipInputStream zip = new ZipInputStream(stream)) {
-				final XMLEventReader reader = factory.createXMLEventReader(zip);
-				while (reader.hasNext()) {
-					final XMLEvent event = reader.nextEvent();
-					if (event.isStartElement() && event.asStartElement().getName()
-							.getLocalPart().equals(ELEMENT_ARTICLE)) {
-						parseArticle(reader);
-					}
-				}
-			} catch (XMLStreamException e) {
-				System.err.println("XMLStreamException");
-			}
-
-		} catch (IOException e) {
-			System.err.println("IOException");
-
-		}
-	}
-
-	// This function reads in an article from the XML zip and parses through the Titles and Id's
-	private void parseArticle(final XMLEventReader reader) throws XMLStreamException {
-		System.out.println("Parsing Articles");
-		String name = null;
-		String id = null;
-		Integer indexID = 0;
-		while (reader.hasNext()) {
-			final XMLEvent event = reader.nextEvent();
-			if (event.isEndElement() && event.asEndElement().getName().getLocalPart().equals(ELEMENT_ARTICLE)) {
-				return;
-			}
-			if (event.isStartElement()) {
-				final StartElement element = event.asStartElement();
-				final String elementName = element.getName().getLocalPart();
-				switch (elementName) {
-				case ELEMENT_TITLE:
-					name = reader.getElementText();
-					break;
-				case ELEMENT_ID:
-					id = reader.getElementText();
-					indexID++;
-					break;
-				}
-			}
-		}
-		//final ArrayList<ArrayList<Integer>> articles = new ArrayList(ArrayList[id, indexID]);
-		//articles.add(article);
-		createIndex(name, indexID);
-	}
-	 */
+	
 
 	/* This function takes the title element from a Pubmed Article and breaks it into keywords.
        If the keyword is a stop word, then it is skipped.
