@@ -67,6 +67,7 @@ public class InvertedIndex {
 	 */
 	public void createIndex(String titleElement, int ID){
 		String [] keywords = titleElement.split("\\W+");
+		//System.out.println(keywords);
 		for (String word : keywords) {
 			word = word.toLowerCase();
 
@@ -115,8 +116,11 @@ public class InvertedIndex {
 			System.out.println();
 		}
 	}
-
-	public void printTable() {
+	
+	/*
+	 * Function to that prints out the Keys and Associated Values
+	 */
+	public void printTable() { 
 		String str;
 		Set<String> keys = KeyWordsTable.keySet();
 		Iterator<String> itr = keys.iterator();
@@ -130,11 +134,10 @@ public class InvertedIndex {
 			System.out.println();
 		}
 	}
-
+	
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
-		//String file = null;
 		InvertedIndex i = new InvertedIndex();
 
 		i.parse();
@@ -144,10 +147,12 @@ public class InvertedIndex {
 		System.out.println("Search the Medline Database: "); 
 		s = sc.nextLine();  
 		i.find(s);
-		//i.printTable();
+		
+		//i.printTable(); // helpful for debugging
+		
 		sc.close();
 		
-		//TrieNode tn = new TrieNode();
+		
 		Trie t = new Trie();
 		String str;
 		Set<String> keys = i.KeyWordsTable.keySet();
@@ -163,11 +168,11 @@ public class InvertedIndex {
 class Trie { 
 	
 	public Trie() {
-
+		root = new TrieNode();
 	}
 
 	// Alphabet size (# of symbols) 
-	static final int ALPHABET_SIZE = 26; 
+	static final int ALPHABET_SIZE = 36; //alphabet and numbers
 
 	// trie node 
 	static class TrieNode 
@@ -185,7 +190,7 @@ class Trie {
 		} 
 	}; 
 
-	static TrieNode root; 
+	TrieNode root; 
 
 	// If not present, inserts key into trie 
 	// If the key is prefix of trie node, 
@@ -200,7 +205,14 @@ class Trie {
 
 		for (level = 0; level < length; level++) 
 		{ 
-			index = key.charAt(level) - 'a'; 
+			if (key.charAt(level) >= '0' && key.charAt(level) <= '9' ) {
+				index = key.charAt(level) - '0';
+			} else if (key.charAt(level) >= 'a' && key.charAt(level) <= 'z') {
+				index = key.charAt(level) - 'a' + 10; 
+			} else {
+				continue;
+			}
+		
 			if (pCrawl.children[index] == null) { 
 				pCrawl.children[index] = new TrieNode();
 			}
@@ -222,7 +234,13 @@ class Trie {
 
 		for (level = 0; level < length; level++) 
 		{ 
-			index = key.charAt(level) - 'a'; 
+			if (key.charAt(level) >= '0' && key.charAt(level) <= '9' ) {
+				index = key.charAt(level) - '0';
+			} else if (key.charAt(level) >= 'a' && key.charAt(level) <= 'z') {
+				index = key.charAt(level) - 'a' + 10; 
+			} else {
+				continue;
+			}
 
 			if (pCrawl.children[index] == null) 
 				return false; 
@@ -232,6 +250,10 @@ class Trie {
 
 		return (pCrawl != null && pCrawl.isEndOfWord); 
 	} 
+	
+	public static void main() {
+		
+	}
 }
 
 
