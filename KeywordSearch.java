@@ -1,37 +1,36 @@
-import InvertedIndex     // make sure can import packages
-import TrieNode          // make sure can import packages
+import InvertedIndex.*;     // make sure can import packages
 import java.util.*;
 import java.io.*;
 import java.lang.*;
 
 public class KeywordSearch {
 
-	public void quickSort(int arr[], int begin, int end) {
+	public void quickSort(List<Pair <Integer, Integer>> list, int begin, int end) {
 		if (begin < end) {
-			int partitionIndex = partition(arr, begin, end);
+			int partitionIndex = partition(list, begin, end);
 
-			quickSort(arr, begin, partitionIndex-1);
-			quickSort(arr, partitionIndex+1, end);
+			quickSort(list, begin, partitionIndex-1);
+			quickSort(list, partitionIndex+1, end);
 		}
 	}
 
-	private int partition(int arr[], int begin, int end) {
-		int pivot = arr[end];
+	private int partition(List<Pair <Integer, Integer>> list, int begin, int end) {
+		int pivot = list[end];
 		int i = (begin-1);
 
 		for (int j = begin; j < end; j++) {
-			if (arr[j] <= pivot) {
+			if (list[j] <= pivot) {
 				i++;
 
-				int swapTemp = arr[i];
-				arr[i] = arr[j];
-				arr[j] = swapTemp;
+				int swapTemp = list[i];
+				list[i] = list[j];
+				list[j] = swapTemp;
 			}
 		}
 
 		int swapTemp = arr[i+1];
-		arr[i+1] = arr[end];
-		arr[end] = swapTemp;
+		list[i+1] = list[end];
+		list[end] = swapTemp;
 
 		return i+1;
 	}
@@ -102,6 +101,25 @@ public class KeywordSearch {
 		// find children trienodes that have isEndOfWord == true and save in matchingKeywordsList
 		// parse through matchingKeywordsList
 		// List trieChildrenList = find(word in list);
+		
+		InvertedIndex i = new InvertedIndex();
+
+		i.parse();
+
+		String inputString; 
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Search the Medline Database: "); 
+		inputString = sc.nextLine();  
+		
+		String [] keywords = inputString.split("\\W+");
+		//System.out.println(keywords);
+		for (String word : inputString) {
+			word = word.toLowerCase();
+			i.find(s);
+		}
+		
+		sc.close();
+		
 		quickSort(trieChildrenList, 0, trieChildrenList.length());
 
 		// union all completed nodes into one sorted list (union function sorts them)

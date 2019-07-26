@@ -1,4 +1,4 @@
-//package InvertedIndex;
+package InvertedIndex;
 
 import java.util.*;
 
@@ -138,19 +138,10 @@ public class InvertedIndex {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
-		InvertedIndex i = new InvertedIndex();
-
-		i.parse();
-
-		String s; 
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Search the Medline Database: "); 
-		s = sc.nextLine();  
-		i.find(s);
-		
+	
 		//i.printTable(); // helpful for debugging
 		
-		sc.close();
+		
 		
 		//creating Trie using insert method on the keys of the KeyWordsTable
 		Trie t = new Trie();
@@ -163,7 +154,7 @@ public class InvertedIndex {
 		}
 		
 		// Testing the Trie
-		System.out.println(t.search(s));
+		//System.out.println(t.search(s));
 		
 
 	}
