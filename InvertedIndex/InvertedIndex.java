@@ -2,10 +2,7 @@ package InvertedIndex;
 
 import java.util.*;
 
-import java.io.*;
-import java.util.List;
-
-import java.util.ArrayList; 
+import java.io.*; 
 
 
 
@@ -158,6 +155,19 @@ public class InvertedIndex {
 
 		InvertedIndex i = new InvertedIndex();
 
+		i.parse();
+
+		// getting user input as String inputString
+		String inputString; 
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Search the Medline Database: "); 
+		inputString = sc.nextLine();  
+		sc.close();
+		
+		
+		//String [] keywords = inputString.split("\\W+");
+		
+		
 		//creating Trie using insert method on the keys of the KeyWordsTable
 		Trie t = new Trie();
 		String str;
@@ -167,7 +177,10 @@ public class InvertedIndex {
 			str = itr.next();
 			t.insert(str);
 		}
-
+		
+		t.CreateKeywordArray();
+		System.out.println(t.kwArray);
+		t.search(inputString);
 		// Testing the Trie
 		//System.out.println(t.search(s));
 
@@ -237,7 +250,7 @@ class Trie {
 		// mark last node as leaf 
 		pCrawl.completedWord = key;
 		
-		//pCrawl.isEndOfWord = true; 
+		
 	} 
 
 	// Returns true if key presents in trie, else false 
@@ -263,7 +276,16 @@ class Trie {
 
 			pCrawl = pCrawl.children[index]; 
 		} 
-
+		
+		// Printing kwArray values for testing
+		System.out.println("Start index: " + pCrawl.rng_start);
+		System.out.println("End index: " + pCrawl.rng_end);
+		System.out.println("Completed Words: ");
+		for (int i = pCrawl.rng_start; i < pCrawl.rng_end; i++) {
+			System.out.print(", " + kwArray.get(i));
+		}
+		
+		
 		return (pCrawl != null && pCrawl.completedWord != ""); 
 	} 
 

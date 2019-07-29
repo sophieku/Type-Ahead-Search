@@ -10,29 +10,37 @@ public class KeywordSearch {
 
 
 	public ArrayList<Integer> union(ArrayList<Integer> l1, ArrayList<Integer> l2) {
-		s
-
-
+	
 		//union block of Keyword Search
 		int i = 0;
 		int j = 0;
+		ArrayList<Integer> returnList = new ArrayList<Integer>();
 		
-		while (l1.get(i) != null && l2.get(i) != null) {
+		while (l1.get(i) != null && l2.get(j) != null) {
 			if (l1.get(i) == l2.get(i)) {
-				finalList.add(l1.get(i));
+				returnList.add(l1.get(i));
 				++i;
 				++j;
-			} else if (l1.get(i)< l2.get(i) ) {
-				finalList.add(l1.get(i));
+			} else if (l1.get(i) < l2.get(i) ) {
+				returnList.add(l1.get(i));
 				++i;
 			} else {
-				finalList[i] = l2[j].getKey();
+				returnList.add(l2.get(j));
 				++j;
 			}	
 		}
+		
 		// append rest of list to final list if one was longer
-		if ( l1[i] == null) {
-
+		if ( l1.get(i) == null) {
+			while (l2.get(j) != null) {
+				returnList.add(l2.get(j));
+				++j;
+			}
+		} else if (l2.get(j) == null) {
+			while (l2.get(j) != null) {
+				returnList.add(l2.get(j));
+				++j;
+			}
 		}
 	}
 
@@ -71,10 +79,6 @@ public class KeywordSearch {
 
 	public static void main(String[] args) {
 		
-		// find children trienodes that have isEndOfWord == true and save in matchingKeywordsList
-		// parse through matchingKeywordsList
-		// List trieChildrenList = find(word in list);
-		
 		InvertedIndex i = new InvertedIndex();
 		i.parse();
 
@@ -98,26 +102,23 @@ public class KeywordSearch {
 			//for now, assume keywordCompletion(word) will return a list of words that complete the keyword
 			ArrayList<String> completedKeywordList = i.keywordCompletion(word);
 			
-			// this loop should sort 
+			ArrayList<Integer> unionedList = new ArrayList<Integer>();
+			// this loop unions keyword completion documents in a sorted order
 			for (int j = 0; j < completedKeywordList.size() - 1; j++) {
 				ArrayList<Integer> tempList = new ArrayList<Integer>();
-				tempList = i.find(completedKeywordList.get(j);
+				tempList = i.find(completedKeywordList.get(j));
 				Collections.sort(tempList);
-				union(tempList, finalList);
+				unionedList = union(tempList, unionedList);
 			}
 			
+			finalList = intersection(finalList, unionedList);
 			
-			i.find(word);
-			counter++;
+			
 		}
 		
 		
 
 	}
-
-
-
-
 
 
 
