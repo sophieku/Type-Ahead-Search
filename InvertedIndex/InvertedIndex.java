@@ -264,7 +264,7 @@ class Trie {
 
 	}
 	
-	public String keywordCompletion(String key) {
+	public ArrayList<String> keywordCompletion(String key) {
 		int level; 
 		int length = key.length(); 
 		int index; 
@@ -282,7 +282,7 @@ class Trie {
 			}
 
 			if (pCrawl.children[index] == null) 
-				return false; 
+				return null; 
 
 			pCrawl = pCrawl.children[index]; 
 		} 

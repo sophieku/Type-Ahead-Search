@@ -1,14 +1,16 @@
 import InvertedIndex.*;     // make sure can import packages
+
+//import java.lang.*;
 import java.util.*;
 import java.io.*;
 import java.util.Arrays; 
-//import java.lang.*;
+import java.util.Collections;
 
 public class KeywordSearch {
 
 
-	public List union(ArrayList<Integer> l1, ArrayList<Integer> l2) {
-		ArrayList<Integer> finalList = new ArrayList<Integer>();
+	public ArrayList<Integer> union(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+		s
 
 
 		//union block of Keyword Search
@@ -34,7 +36,7 @@ public class KeywordSearch {
 		}
 	}
 
-	public List intersection(List l1, List l2) {
+	public  ArrayList<Integer> intersection(ArrayList<Integer> l1, ArrayList<Integer> l2) {
 		while (l1[i] != null && l2[j] != null) {
 			if (l1[i].getKey() == l2[j].getKey()) {
 				finalList[i] = l1[i].getKey();
@@ -81,34 +83,35 @@ public class KeywordSearch {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Search the Medline Database: "); 
 		inputString = sc.nextLine();  
+		sc.close();
 		
-		// Finding docs from inverted index and sorting using quick sort
-		String [] keywords = inputString.split("\\W+");
-		int[] doclist;
-		int counter = 0;
+		
+		String [] keywords = inputString.split("\\W+"); //splitting inputString into keywords
+		
+		
+		// Main function to execute keyword completion and search
+		
+		ArrayList<Integer> finalList = new ArrayList<Integer>();
 		for (String word : keywords) {
 			word = word.toLowerCase();
+			
+			//for now, assume keywordCompletion(word) will return a list of words that complete the keyword
+			ArrayList<String> completedKeywordList = i.keywordCompletion(word);
+			
+			// this loop should sort 
+			for (int j = 0; j < completedKeywordList.size() - 1; j++) {
+				ArrayList<Integer> tempList = new ArrayList<Integer>();
+				tempList = i.find(completedKeywordList.get(j);
+				Collections.sort(tempList);
+				union(tempList, finalList);
+			}
+			
+			
 			i.find(word);
 			counter++;
 		}
 		
-		sc.close();
 		
-		quickSort(trieChildrenList, 0, trieChildrenList.length());
-
-		// union all completed nodes into one sorted list (union function sorts them)
-		// for loop to union all keywords?
-		List unionedNodesList = new ArrayList();
-		while (trieChildrenList[i+1] != null) {
-			if (i == 0) {
-				unionedNodesList = trieChildrenList[i];
-			}
-			unionedNodesList = union(unionedNodesList, trieChildrenList[i+1]);
-			++i;
-		}
-
-		//Intersect unioned lists
-		while 
 
 	}
 
