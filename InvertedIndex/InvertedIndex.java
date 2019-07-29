@@ -148,7 +148,7 @@ public class InvertedIndex {
 			System.out.println();
 		}
 	}
-	
+
 
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -193,7 +193,8 @@ class Trie {
 		// end of a word 
 		boolean isEndOfWord; 
 		int rng_start, rng_end;
-		ArrayList<String> kwArray;
+		String completedWord = "";
+		
 
 		TrieNode(){ 
 			isEndOfWord = false; 
@@ -203,6 +204,7 @@ class Trie {
 	}; 
 
 	TrieNode root; 
+	ArrayList<String> kwArray;
 
 	// If not present, inserts key into trie 
 	// If the key is prefix of trie node, 
@@ -233,7 +235,9 @@ class Trie {
 		} 
 
 		// mark last node as leaf 
-		pCrawl.isEndOfWord = true; 
+		pCrawl.completedWord = key;
+		
+		//pCrawl.isEndOfWord = true; 
 	} 
 
 	// Returns true if key presents in trie, else false 
@@ -260,16 +264,16 @@ class Trie {
 			pCrawl = pCrawl.children[index]; 
 		} 
 
-		return (pCrawl != null && pCrawl.isEndOfWord); 
+		return (pCrawl != null && pCrawl.completedWord != ""); 
 	} 
 
 	public static void main() {
 
 	}
 
-	
+
 	public void CreateKeywordArray() {
-		ArrayList<String> kwArray = new ArrayList<String>(); // kwarray is a variable of this class
+		kwArray = new ArrayList<String>(); // kwarray is a variable of this class
 		TraverseTrieAndCreateArray(root);
 	}
 
@@ -277,14 +281,17 @@ class Trie {
 		n.rng_start = kwArray.size(); // initialize the starting position of n's range in the array
 		n.rng_end = kwArray.size() - 1;  // initialize the ending position of n's range in the array
 
-		if (n.isEndOfWord == TRUE) {
-			kwArray.insert(n.kw); // insert a keyword to kwarray
+		if (n.completedWord != "") {
+			kwArray.add(n.completedWord); // insert a keyword to kwarray
 			n.rng_end++;
 		}
 
-		for (each child c of n) {
-			TraverseTrieAndCreateArray(c);
-			n.rng_end = c.rng_end;
+		for (int i = 0; i < 36; i++) {
+			TrieNode c = n.children[i];
+			if (c != null) {
+				TraverseTrieAndCreateArray(c);
+				n.rng_end = c.rng_end;
+			}
 		}
 	}
 }
