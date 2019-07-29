@@ -108,7 +108,7 @@ public class InvertedIndex {
 	// input is a keyword, returns a list a documents that contain that word
 	public ArrayList<Integer> find(String word) {
 		ArrayList<Integer> docList = new ArrayList<Integer>();
-		
+
 		if (KeyWordsTable.containsKey(word)) {
 			List<Pair <Integer, Integer> > docsWithFreq = KeyWordsTable.get(word);
 			for (int idx = 0; idx <= docsWithFreq.size() - 1; idx++) {
@@ -116,7 +116,7 @@ public class InvertedIndex {
 			}
 		} 
 		return docList;
-		
+
 
 		/*
 		if (KeyWordsTable.containsKey(word)) {
@@ -148,6 +148,7 @@ public class InvertedIndex {
 			System.out.println();
 		}
 	}
+	
 
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -183,7 +184,7 @@ class Trie {
 	// Alphabet size (# of symbols) 
 	static final int ALPHABET_SIZE = 36; //alphabet and numbers
 
- 
+
 	static class TrieNode 
 	{ 
 		TrieNode[] children = new TrieNode[ALPHABET_SIZE]; 
@@ -191,6 +192,8 @@ class Trie {
 		// isEndOfWord is true if the node represents 
 		// end of a word 
 		boolean isEndOfWord; 
+		int rng_start, rng_end;
+		ArrayList<String> kwArray;
 
 		TrieNode(){ 
 			isEndOfWord = false; 
@@ -263,33 +266,29 @@ class Trie {
 	public static void main() {
 
 	}
+
 	
-	public ArrayList<String> keywordCompletion(String key) {
-		int level; 
-		int length = key.length(); 
-		int index; 
-		TrieNode pCrawl = root; 
-		ArrayList<Integer> finalList = new ArrayList<Integer>();
+	public void CreateKeywordArray() {
+		ArrayList<String> kwArray = new ArrayList<String>(); // kwarray is a variable of this class
+		TraverseTrieAndCreateArray(root);
+	}
 
-		for (level = 0; level < length + 1; level++) 
-		{ 
-			if (key.charAt(level) >= '0' && key.charAt(level) <= '9' ) {
-				index = key.charAt(level) - '0';
-			} else if (key.charAt(level) >= 'a' && key.charAt(level) <= 'z') {
-				index = key.charAt(level) - 'a' + 10; 
-			} else {
-				continue;
-			}
+	public void TraverseTrieAndCreateArray(TrieNode n) {
+		n.rng_start = kwArray.size(); // initialize the starting position of n's range in the array
+		n.rng_end = kwArray.size() - 1;  // initialize the ending position of n's range in the array
 
-			if (pCrawl.children[index] == null) 
-				return null; 
+		if (n.isEndOfWord == TRUE) {
+			kwArray.insert(n.kw); // insert a keyword to kwarray
+			n.rng_end++;
+		}
 
-			pCrawl = pCrawl.children[index]; 
-		} 
-
-		return (pCrawl != null && pCrawl.isEndOfWord); 
+		for (each child c of n) {
+			TraverseTrieAndCreateArray(c);
+			n.rng_end = c.rng_end;
+		}
 	}
 }
+
 
 
 class Pair<K, V> {
