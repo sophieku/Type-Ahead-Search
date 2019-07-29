@@ -40,7 +40,7 @@ public class InvertedIndex {
 			"they'll", "they're", "they've", "we'd", "we'll", "we're", "we've",
 			"what's", "when's", "where's", "who's", "why's", "would");
 
-	
+
 	public InvertedIndex() {
 
 	}
@@ -57,7 +57,7 @@ public class InvertedIndex {
 			}
 		}
 	}
-	
+
 
 	/* This function takes the title element from a Pubmed Article and breaks it into keywords.
        If the keyword is a stop word, then it is skipped.
@@ -80,17 +80,17 @@ public class InvertedIndex {
 				List<Pair <Integer, Integer> >  keyToDocList = KeyWordsTable.get(word);
 				int length = keyToDocList.size();
 				int freq = 0;
-				for (int i = 0; i < length; i++) {
-					Pair<Integer,Integer> aPair = keyToDocList.get(i);
-					int pairDocID = aPair.getFirst(); 
-					if (pairDocID == ID){
-						freq = aPair.getSecond();
-						freq++;       
-						Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
-						keyToDocList.set(i, returnPair);
-						break;
-					} 
-				}
+
+				Pair<Integer,Integer> aPair = keyToDocList.get(length - 1);
+				int pairDocID = aPair.getFirst(); 
+				if (pairDocID == ID){
+					freq = aPair.getSecond();
+					freq++;       
+					Pair <Integer, Integer> returnPair = Pair.createPair(pairDocID, freq);
+					keyToDocList.set(length - 1, returnPair);
+					break;
+				} 
+
 				if (freq == 0) {
 					keyToDocList.add(new Pair<Integer, Integer> (ID, 1));
 				}
@@ -105,8 +105,20 @@ public class InvertedIndex {
 		}
 	}
 
-	public void find(String word) {
+	// input is a keyword, returns a list a documents that contain that word
+	public ArrayList<Integer> find(String word) {
+		ArrayList<Integer> docList = new ArrayList<Integer>();
+		
+		if (KeyWordsTable.containsKey(word)) {
+			List<Pair <Integer, Integer> > docsWithFreq = KeyWordsTable.get(word);
+			for (int idx = 0; idx <= docsWithFreq.size() - 1; idx++) {
+				docList.add(docsWithFreq.get(idx).getFirst());
+			}
+		} 
+		return docList;
+		
 
+		/*
 		if (KeyWordsTable.containsKey(word)) {
 			System.out.println("The word " + word + " is in the documents: "); // for debugging
 			List<Pair <Integer, Integer> > docs = KeyWordsTable.get(word);
@@ -115,8 +127,10 @@ public class InvertedIndex {
 			}
 			System.out.println();
 		}
+		 */
+
 	}
-	
+
 	/*
 	 * Function to that prints out the Keys and Associated Values
 	 */
@@ -134,15 +148,15 @@ public class InvertedIndex {
 			System.out.println();
 		}
 	}
-	
+
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
-	
+
 		//i.printTable(); // helpful for debugging
-		
-		
-		
+
+		InvertedIndex i = new InvertedIndex();
+
 		//creating Trie using insert method on the keys of the KeyWordsTable
 		Trie t = new Trie();
 		String str;
@@ -152,16 +166,16 @@ public class InvertedIndex {
 			str = itr.next();
 			t.insert(str);
 		}
-		
+
 		// Testing the Trie
 		//System.out.println(t.search(s));
-		
+
 
 	}
 }
 
 class Trie { 
-	
+
 	public Trie() {
 		root = new TrieNode();
 	}
@@ -169,7 +183,7 @@ class Trie {
 	// Alphabet size (# of symbols) 
 	static final int ALPHABET_SIZE = 36; //alphabet and numbers
 
-	// trie node 
+ 
 	static class TrieNode 
 	{ 
 		TrieNode[] children = new TrieNode[ALPHABET_SIZE]; 
@@ -207,7 +221,7 @@ class Trie {
 			} else {
 				continue;
 			}
-		
+
 			if (pCrawl.children[index] == null) { 
 				pCrawl.children[index] = new TrieNode();
 			}
@@ -245,9 +259,35 @@ class Trie {
 
 		return (pCrawl != null && pCrawl.isEndOfWord); 
 	} 
-	
+
 	public static void main() {
-		
+
+	}
+	
+	public String keywordCompletion(String key) {
+		int level; 
+		int length = key.length(); 
+		int index; 
+		TrieNode pCrawl = root; 
+		ArrayList<Integer> finalList = new ArrayList<Integer>();
+
+		for (level = 0; level < length + 1; level++) 
+		{ 
+			if (key.charAt(level) >= '0' && key.charAt(level) <= '9' ) {
+				index = key.charAt(level) - '0';
+			} else if (key.charAt(level) >= 'a' && key.charAt(level) <= 'z') {
+				index = key.charAt(level) - 'a' + 10; 
+			} else {
+				continue;
+			}
+
+			if (pCrawl.children[index] == null) 
+				return false; 
+
+			pCrawl = pCrawl.children[index]; 
+		} 
+
+		return (pCrawl != null && pCrawl.isEndOfWord); 
 	}
 }
 

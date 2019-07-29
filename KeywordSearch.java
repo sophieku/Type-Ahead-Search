@@ -1,55 +1,27 @@
 import InvertedIndex.*;     // make sure can import packages
 import java.util.*;
 import java.io.*;
-import java.lang.*;
+import java.util.Arrays; 
+//import java.lang.*;
 
 public class KeywordSearch {
 
-	public void quickSort(List<Pair <Integer, Integer>> list, int begin, int end) {
-		if (begin < end) {
-			int partitionIndex = partition(list, begin, end);
 
-			quickSort(list, begin, partitionIndex-1);
-			quickSort(list, partitionIndex+1, end);
-		}
-	}
-
-	private int partition(List<Pair <Integer, Integer>> list, int begin, int end) {
-		int pivot = list[end];
-		int i = (begin-1);
-
-		for (int j = begin; j < end; j++) {
-			if (list[j] <= pivot) {
-				i++;
-
-				int swapTemp = list[i];
-				list[i] = list[j];
-				list[j] = swapTemp;
-			}
-		}
-
-		int swapTemp = arr[i+1];
-		list[i+1] = list[end];
-		list[end] = swapTemp;
-
-		return i+1;
-	}
-
-	public List union(List l1, List l2) {
-		List finalList;
+	public List union(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+		ArrayList<Integer> finalList = new ArrayList<Integer>();
 
 
 		//union block of Keyword Search
 		int i = 0;
 		int j = 0;
-		//for (int k = 0; k < (l1.length() + l2.length()) {
-		while (l1[i] != null && l2[j] != null) {
-			if (l1[i].getKey() == l2[j].getKey()) {
-				finalList[i] = l1[i].getKey();
+		
+		while (l1.get(i) != null && l2.get(i) != null) {
+			if (l1.get(i) == l2.get(i)) {
+				finalList.add(l1.get(i));
 				++i;
 				++j;
-			} else if (l1[i].getKey()< l2[j].getKey() ) {
-				finalList[i] = l1[i].getKey(); 
+			} else if (l1.get(i)< l2.get(i) ) {
+				finalList.add(l1.get(i));
 				++i;
 			} else {
 				finalList[i] = l2[j].getKey();
@@ -95,27 +67,29 @@ public class KeywordSearch {
 
 
 
-	public static void main {
-		// get input word from user, save as searchString
-		// parse string into keywords
+	public static void main(String[] args) {
+		
 		// find children trienodes that have isEndOfWord == true and save in matchingKeywordsList
 		// parse through matchingKeywordsList
 		// List trieChildrenList = find(word in list);
 		
 		InvertedIndex i = new InvertedIndex();
-
 		i.parse();
 
+		// getting user input as String inputString
 		String inputString; 
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Search the Medline Database: "); 
 		inputString = sc.nextLine();  
 		
+		// Finding docs from inverted index and sorting using quick sort
 		String [] keywords = inputString.split("\\W+");
-		//System.out.println(keywords);
-		for (String word : inputString) {
+		int[] doclist;
+		int counter = 0;
+		for (String word : keywords) {
 			word = word.toLowerCase();
-			i.find(s);
+			i.find(word);
+			counter++;
 		}
 		
 		sc.close();
