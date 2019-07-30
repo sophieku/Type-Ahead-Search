@@ -179,16 +179,16 @@ public class InvertedIndex {
 		}
 		
 		t.CreateKeywordArray();
-		System.out.println(t.kwArray);
-		t.search(inputString);
+		/*System.out.println(t.kwArray);
+		//t.search(inputString);
 		// Testing the Trie
-		//System.out.println(t.search(s));
-
+		System.out.println(t.findCompletedWordsInTrie(inputString));
+		 */
 
 	}
 }
 
-class Trie { 
+public class Trie { 
 
 	public Trie() {
 		root = new TrieNode();
@@ -278,13 +278,13 @@ class Trie {
 		} 
 		
 		// Printing kwArray values for testing
-		System.out.println("Start index: " + pCrawl.rng_start);
+		/*System.out.println("Start index: " + pCrawl.rng_start);
 		System.out.println("End index: " + pCrawl.rng_end);
 		System.out.println("Completed Words: ");
 		for (int i = pCrawl.rng_start; i < pCrawl.rng_end; i++) {
 			System.out.print(", " + kwArray.get(i));
 		}
-		
+		*/
 		
 		return (pCrawl != null && pCrawl.completedWord != ""); 
 	} 
@@ -315,6 +315,38 @@ class Trie {
 				n.rng_end = c.rng_end;
 			}
 		}
+	}
+	
+	public ArrayList<String> findCompletedWordsInTrie(String key) {
+		
+		ArrayList<String> returnList = new ArrayList<String>();
+		returnList.add(key);
+		int level; 
+		int length = key.length(); 
+		int index; 
+		TrieNode pCrawl = root; 
+
+		for (level = 0; level < length; level++) 
+		{ 
+			if (key.charAt(level) >= '0' && key.charAt(level) <= '9' ) {
+				index = key.charAt(level) - '0';
+			} else if (key.charAt(level) >= 'a' && key.charAt(level) <= 'z') {
+				index = key.charAt(level) - 'a' + 10; 
+			} else {
+				continue;
+			}
+
+			if (pCrawl.children[index] == null) 
+				return returnList; 
+
+			pCrawl = pCrawl.children[index]; 
+		} 
+		
+		
+		for (int i = pCrawl.rng_start; i < pCrawl.rng_end; i++) {
+			 returnList.add(kwArray.get(i));
+		}
+		return returnList; 
 	}
 }
 

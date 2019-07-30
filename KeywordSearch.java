@@ -1,6 +1,6 @@
 import InvertedIndex.*;     // make sure can import packages
 
-//import java.lang.*;
+
 import java.util.*;
 import java.io.*;
 import java.util.Arrays; 
@@ -8,10 +8,12 @@ import java.util.Collections;
 
 public class KeywordSearch {
 
-
-	public ArrayList<Integer> union(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+	public KeywordSearch() {
+		
+	}
 	
-		//union block of Keyword Search
+	public ArrayList<Integer> union(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+
 		int i = 0;
 		int j = 0;
 		ArrayList<Integer> returnList = new ArrayList<Integer>();
@@ -42,20 +44,29 @@ public class KeywordSearch {
 				++j;
 			}
 		}
+		
+		return returnList;
 	}
 
-	public  ArrayList<Integer> intersection(ArrayList<Integer> l1, ArrayList<Integer> l2) {
-		while (l1[i] != null && l2[j] != null) {
-			if (l1[i].getKey() == l2[j].getKey()) {
-				finalList[i] = l1[i].getKey();
+	public ArrayList<Integer> intersection(ArrayList<Integer> l1, ArrayList<Integer> l2) {
+		
+		int i = 0;
+		int j = 0;
+		ArrayList<Integer> returnList = new ArrayList<Integer>();
+		
+		while (l1.get(i) != null && l2.get(j) != null) {
+			if (l1.get(i) == l2.get(j)) {
+				returnList.add(l1.get(i));
 				++i;
 				++j;
-			} else if (l1[i].getKey()< l2[j].getKey() ) { 
+			} else if (l1.get(i) < l2.get(j) ) { 
 				++i;
 			} else {
 				++j;
 			}	
 		}
+		
+		return returnList;
 	}
 
 	// function that takes in a term t and document d, and returns the score using tf*idf
@@ -81,7 +92,11 @@ public class KeywordSearch {
 		
 		InvertedIndex i = new InvertedIndex();
 		i.parse();
-
+		
+		Trie t = new Trie();
+		
+		KeywordSearch k = new KeywordSearch();
+		
 		// getting user input as String inputString
 		String inputString; 
 		Scanner sc = new Scanner(System.in);
@@ -98,21 +113,18 @@ public class KeywordSearch {
 		ArrayList<Integer> finalList = new ArrayList<Integer>();
 		for (String word : keywords) {
 			word = word.toLowerCase();
-			
-			//for now, assume keywordCompletion(word) will return a list of words that complete the keyword
-			ArrayList<String> completedKeywordList = i.keywordCompletion(word);
-			
+			ArrayList<String> completedKeywordList = i.findCompletedWordsInTrie(word);
 			ArrayList<Integer> unionedList = new ArrayList<Integer>();
-			// this loop unions keyword completion documents in a sorted order
+			
+			// this inner loop unions doc lists for the words in completedKeywordList
 			for (int j = 0; j < completedKeywordList.size() - 1; j++) {
 				ArrayList<Integer> tempList = new ArrayList<Integer>();
-				tempList = i.find(completedKeywordList.get(j));
-				Collections.sort(tempList);
-				unionedList = union(tempList, unionedList);
+				tempList = i.find(completedKeywordList.get(j)); //find documents containing the word in this iteration
+				Collections.sort(tempList);                     // sort the document list
+				unionedList = k.union(tempList, unionedList);     // union with the other lists
 			}
 			
-			finalList = intersection(finalList, unionedList);
-			
+			finalList = k.intersection(finalList, unionedList);
 			
 		}
 		
