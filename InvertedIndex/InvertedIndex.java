@@ -14,7 +14,7 @@ public class InvertedIndex {
 	public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
 
 	public static final List<String> stopwords = Arrays.asList("a", "about", "above", "after", "again", "against", "ain", "all", "am", "an",
-			"and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been",
+			"and", "any", "are", "aren", "aren't", "as", "at", "be", "because", "been", "by",
 			"before", "being", "below", "between", "both", "but", "by", "can", "couldn",
 			"couldn't", "d", "did", "didn", "didn't", "do", "does", "doesn", "doesn't",
 			"doing", "don", "don't", "down", "during", "each", "few", "for", "from",

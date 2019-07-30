@@ -133,7 +133,7 @@ public class Trie {
 	public ArrayList<String> findCompletedWordsInTrie(String key) {
 		
 		ArrayList<String> returnList = new ArrayList<String>();
-		returnList.add(key);
+		
 		int level; 
 		int length = key.length(); 
 		int index; 
@@ -155,9 +155,10 @@ public class Trie {
 			pCrawl = pCrawl.children[index]; 
 		} 
 		
-		
-		for (int i = pCrawl.rng_start; i < pCrawl.rng_end; i++) {
-			 returnList.add(kwArray.get(i));
+		System.out.println("pCrawl.rng_start number is " + pCrawl.rng_start + ". The word is: " + kwArray.get(pCrawl.rng_start));
+		System.out.println("pCrawl.rng_end number is " + pCrawl.rng_end + ". The word is: " + kwArray.get(pCrawl.rng_end));
+		for (int i = pCrawl.rng_start; i <= pCrawl.rng_end; i++) {
+			returnList.add(kwArray.get(i));
 		}
 		return returnList; 
 	}

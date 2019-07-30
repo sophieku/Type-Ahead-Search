@@ -147,9 +147,14 @@ public class KeywordSearch {
 				unionedList = k.union(tempList, unionedList);            // union with the other lists
 				System.out.println("The unioned List for " + word + " is now : " + unionedList);
 				System.out.println();
+				
+			
 			}
-			System.out.println("The unioned List for " + word + " is : " + unionedList);
 
+			if (finalList.isEmpty()) {
+				finalList = unionedList;
+			}
+			
 			finalList = k.intersection(finalList, unionedList);
 			System.out.println("The final list is: " + finalList);
 
