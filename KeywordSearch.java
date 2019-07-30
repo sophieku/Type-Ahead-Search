@@ -1,5 +1,5 @@
-import InvertedIndex.*;     // make sure can import packages
-
+import InvertedIndex.*;     
+import Trie.*;
 
 import java.util.*;
 import java.io.*;
@@ -68,7 +68,7 @@ public class KeywordSearch {
 		
 		return returnList;
 	}
-
+/*
 	// function that takes in a term t and document d, and returns the score using tf*idf
 	public float score(String t, Integer d) {
 		float tf, idf = 0.0;
@@ -86,9 +86,9 @@ public class KeywordSearch {
 
 	}
 
+*/
 
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		
 		InvertedIndex i = new InvertedIndex();
 		i.parse();
@@ -113,22 +113,23 @@ public class KeywordSearch {
 		ArrayList<Integer> finalList = new ArrayList<Integer>();
 		for (String word : keywords) {
 			word = word.toLowerCase();
-			ArrayList<String> completedKeywordList = i.findCompletedWordsInTrie(word);
+			ArrayList<String> completedKeywordList = t.findCompletedWordsInTrie(word);
 			ArrayList<Integer> unionedList = new ArrayList<Integer>();
 			
 			// this inner loop unions doc lists for the words in completedKeywordList
 			for (int j = 0; j < completedKeywordList.size() - 1; j++) {
 				ArrayList<Integer> tempList = new ArrayList<Integer>();
-				tempList = i.find(completedKeywordList.get(j)); //find documents containing the word in this iteration
-				Collections.sort(tempList);                     // sort the document list
-				unionedList = k.union(tempList, unionedList);     // union with the other lists
+				tempList = i.find(completedKeywordList.get(j));          //find documents containing the word in this iteration
+				Collections.sort(tempList);                              // sort the document list
+				unionedList = k.union(tempList, unionedList);            // union with the other lists
 			}
+			System.out.println("The unioned List for " + word + " is : " + unionedList);
 			
 			finalList = k.intersection(finalList, unionedList);
 			
 		}
 		
-		
+		System.out.println("The final list is: " + finalList);
 
 	}
 
