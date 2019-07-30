@@ -155,8 +155,8 @@ public class Trie {
 			pCrawl = pCrawl.children[index]; 
 		} 
 		
-		System.out.println("pCrawl.rng_start number is " + pCrawl.rng_start + ". The word is: " + kwArray.get(pCrawl.rng_start));
-		System.out.println("pCrawl.rng_end number is " + pCrawl.rng_end + ". The word is: " + kwArray.get(pCrawl.rng_end));
+		//System.out.println("pCrawl.rng_start number is " + pCrawl.rng_start + ". The word is: " + kwArray.get(pCrawl.rng_start));
+		//System.out.println("pCrawl.rng_end number is " + pCrawl.rng_end + ". The word is: " + kwArray.get(pCrawl.rng_end));
 		for (int i = pCrawl.rng_start; i <= pCrawl.rng_end; i++) {
 			returnList.add(kwArray.get(i));
 		}

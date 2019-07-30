@@ -1,5 +1,5 @@
 package InvertedIndex;
-import Trie.*;
+//import Trie.*;
 
 import java.util.*;
 
@@ -9,7 +9,7 @@ import java.io.*;
 
 
 public class InvertedIndex {
-
+	public ArrayList<String> articleTitleIndexToID;
 
 	public Hashtable <String, List< Pair<Integer, Integer> > > KeyWordsTable = new Hashtable <String, List <Pair<Integer, Integer> > >();
 
@@ -40,14 +40,14 @@ public class InvertedIndex {
 
 
 	public InvertedIndex() {
-
+		articleTitleIndexToID = new ArrayList<String>();
 	}
 	public void parse() throws FileNotFoundException, IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader("pubmed19n0013.txt"))) {
 			String line;
 			int ID = 0;
-			ArrayList<String> articleTitleIndexToID = new ArrayList<String>();
-			System.out.println("Inside parse, and before while loop");
+			//ArrayList<String> articleTitleIndexToID = new ArrayList<String>();
+
 			while ((line = br.readLine()) != null) {
 				createIndex(line, ID);
 				articleTitleIndexToID.add(line);
@@ -65,7 +65,7 @@ public class InvertedIndex {
 	 */
 	public void createIndex(String titleElement, int ID){
 		String [] keywords = titleElement.split("\\W+");
-		
+
 		for (String word : keywords) {
 			word = word.toLowerCase();
 
@@ -146,6 +146,8 @@ public class InvertedIndex {
 			System.out.println();
 		}
 	}
+	
+	
 
 
 
@@ -165,11 +167,11 @@ public class InvertedIndex {
 		System.out.println("Search the Medline Database: "); 
 		inputString = sc.nextLine();  
 		sc.close();
-		*/
-		
+		 */
+
 		//String [] keywords = inputString.split("\\W+");
-		
-		
+
+
 		//creating Trie using insert method on the keys of the KeyWordsTable
 		/* Trie t = new Trie();
 		String str;
@@ -180,8 +182,8 @@ public class InvertedIndex {
 			t.insert(str);
 		}
 		t.CreateKeywordArray();
-		
-		
+
+
 		/*System.out.println(t.kwArray);
 		//t.search(inputString);
 		// Testing the Trie
