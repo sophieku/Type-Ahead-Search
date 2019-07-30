@@ -154,7 +154,7 @@ public class InvertedIndex {
 
 		//i.printTable(); // helpful for debugging
 
-		InvertedIndex i = new InvertedIndex();
+		/*InvertedIndex i = new InvertedIndex();
 
 		i.parse();
 
@@ -171,7 +171,7 @@ public class InvertedIndex {
 		
 		
 		//creating Trie using insert method on the keys of the KeyWordsTable
-		Trie t = new Trie();
+		/* Trie t = new Trie();
 		String str;
 		Set<String> keys = i.KeyWordsTable.keySet();
 		Iterator<String> itr = keys.iterator();
@@ -179,8 +179,9 @@ public class InvertedIndex {
 			str = itr.next();
 			t.insert(str);
 		}
-		
 		t.CreateKeywordArray();
+		
+		
 		/*System.out.println(t.kwArray);
 		//t.search(inputString);
 		// Testing the Trie
