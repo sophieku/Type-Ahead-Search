@@ -1,4 +1,5 @@
 package InvertedIndex;
+import Pair.*;
 //import Trie.*;
 
 import java.util.*;
@@ -69,7 +70,7 @@ public class InvertedIndex {
 		for (String word : keywords) {
 			word = word.toLowerCase();
 
-			//check for stopwords, if current word is a stopword, it is skipped and not added to the index.
+			//check for stopwords, if current word is a stop word, it is skipped and not added to the index.
 			if (stopwords.contains(word)) {
 				continue;
 			} 
@@ -195,26 +196,3 @@ public class InvertedIndex {
 
 
 
-class Pair<K, V> {
-
-	private final K element0;
-	private final V element1;
-
-	public static <K, V> Pair<K, V> createPair(K element0, V element1) {
-		return new Pair<K, V>(element0, element1);
-	}
-
-	public Pair(K element0, V element1) {
-		this.element0 = element0;
-		this.element1 = element1;
-	}
-
-	public K getFirst() {
-		return element0;
-	}
-
-	public V getSecond() {
-		return element1;
-	}
-
-}
