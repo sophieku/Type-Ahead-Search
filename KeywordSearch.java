@@ -6,8 +6,6 @@ import java.io.*;
 
 public class KeywordSearch {
 
-
-
 	public KeywordSearch() {
 
 	}
@@ -85,17 +83,16 @@ public class KeywordSearch {
 		double idf;
 
 		List <Pair <Integer, Integer> > wordToDocList = i.KeyWordsTable.get(t);
-		System.out.println("kwtable size: " + i.KeyWordsTable.size());
-
+		
+		// finding raw count for term frequency
 		for (int idx = 0; idx <= wordToDocList.size() - 1; idx++) {
 			int docNum = wordToDocList.get(idx).getFirst();
 			if (docNum == d) {
 				tf = wordToDocList.get(idx).getSecond();
 				break;
 			}
-
 		}
-
+		
 		//finding tf
 		if (tf > 0) {
 			tf =  1.0 + Math.log10(tf);
@@ -106,30 +103,37 @@ public class KeywordSearch {
 		int totalNumDocsInCorpus = i.articleTitleIndexToID.size();
 		idf = Math.log10((totalNumDocsInCorpus) / (1 + numDocsThatContainKeyword)); //find out how to get largest doc ID from invertedIndex.java
 		return (tf * idf);
-
+	
 	}
 
 
 	public ArrayList<Integer> rankDocuments(String[] keywords, ArrayList<Integer> unrankedList, Trie t, InvertedIndex i) {
 
 		ArrayList <Pair <Integer, Double>> docScoreList = new ArrayList <Pair <Integer, Double>>();
-		for (int n = 0; n <= unrankedList.size(); n++) {
+		for (int n = 0; n <= unrankedList.size() - 1; n++) {
 			Double docScore = 0.0;
 			Integer docNumber = unrankedList.get(n);
 			for (String word : keywords) {
 				ArrayList<String> completedKeywordList = t.findCompletedWordsInTrie(word);
 				for (int j = 0; j <= completedKeywordList.size() - 1; j++) {
-					docScore = docScore + score(word, docNumber, i);
+					docScore = docScore + score(completedKeywordList.get(j), docNumber, i);
 				}
 			}
-			Pair<Integer, Double> scoreNumPair  =  Pair.createPair(docNumber, docScore);
+			System.out.println("The docScore for document " + docNumber + " is:  " + docScore);
+			Pair<Integer, Double> scoreNumPair = Pair.createPair(docNumber, docScore);
 			docScoreList.add(scoreNumPair);
 		}
-
-
-		ArrayList<Integer> rankedList = new ArrayList<Integer>();
-		return rankedList;
-
+		
+		Collections.sort(docScoreList, new sortByScore());
+		
+		
+		ArrayList<Integer> rankedDocsList = new ArrayList<Integer>();
+		for (int n = 0; n <= docScoreList.size() - 1; n++) {
+			// getting doc number from doc score list and adding to rankedDocsList
+			rankedDocsList.add(docScoreList.get(n).getFirst()); 
+		}
+		
+		return rankedDocsList;
 	}
 
 
@@ -176,8 +180,8 @@ public class KeywordSearch {
 
 			ArrayList<String> completedKeywordList = t.findCompletedWordsInTrie(word);
 
-			System.out.println("The current keyword is: " + word);
-			System.out.println("The completedKeywordList is: " + completedKeywordList);
+			//System.out.println("The current keyword is: " + word);
+			//System.out.println("The completedKeywordList is: " + completedKeywordList);
 			System.out.println();
 
 			ArrayList<Integer> unionedList = new ArrayList<Integer>();
@@ -196,10 +200,10 @@ public class KeywordSearch {
 				tempList = i.find(completedKeywordList.get(j));          //find documents containing the word in this iteration
 				Collections.sort(tempList);                              // sort the document list
 
-				System.out.println("The doc tempList for " + completedKeywordList.get(j)+ " is: " + tempList);
+				//System.out.println("The doc tempList for " + completedKeywordList.get(j)+ " is: " + tempList);
 				unionedList = k.union(tempList, unionedList);            // union with the other lists
-				System.out.println("The unioned List for " + word + " is: " + unionedList);
-				System.out.println();
+				//System.out.println("The unioned List for " + word + " is: " + unionedList);
+				//System.out.println();
 
 
 			}
@@ -210,37 +214,44 @@ public class KeywordSearch {
 				finalList = k.intersection(finalList, unionedList);
 			}
 
-			System.out.println("The final list is currently: " + finalList);
-			System.out.println();
-
 		}
+		
+		System.out.println("The final list is currently: " + finalList);
+		System.out.println();
+		
+		ArrayList<Integer> rankedList = k.rankDocuments(keywords, finalList, t, i);
+		Collections.reverse(rankedList);
+		System.out.println("The ranked list is currently: " + rankedList);
+		System.out.println();
 
-		//System.out.println("score testing" + k.score("uterus", 19, i));
-
+		
 		System.out.println("Search Results: Titles of related articles located below.");
-		for (int n = 0; n <= finalList.size() - 1; n++) {
-			int docNum = finalList.get(n);
+		for (int n = 0; n <= rankedList.size() - 1; n++) {
+			int docNum = rankedList.get(n);
 			String articleTitle = i.articleTitleIndexToID.get(docNum);
 
 			System.out.println(articleTitle);
 		}
 
-
 	}
 }
 
-class Compare { 
 
-	static void compare(ArrayList<Pair<Integer, Double>> arr, int n) 
-	{ 
-		// Comparator to sort the pair according to second element 
-		Arrays.sort(arr, new Comparator<Pair<Integer, Double>>() { 
-			@Override public int compare(Pair p1, Pair p2) 
-			{ 
-				return p1.y - p2.y; 
-			} 
-		}); 
-
-	} 
+class sortByScore implements Comparator<Pair<Integer, Double>>  { 
+	@Override
+	public int compare(Pair<Integer, Double> p1, Pair<Integer, Double> p2) {
+		// TODO Auto-generated method stub
+		Double x = p1.getSecond();
+		Double y = p2.getSecond();
+		if (x < y) {
+			return -1;
+		} else if (x > y) {
+			return 1;
+		} else {
+			return 0;
+		}
+		
+	}
+	
  
 }
