@@ -13,8 +13,8 @@ Sample data is from [MEDLINE] (https://www.nlm.nih.gov/databases/download/pubmed
 ## Roadmap
 To be added: Result ranking and fuzzy search
 
-## Usage
-
+## Possible applications
+Input method editor, email clients, medical database, code completion.
 
 ## Project Status
-Beginning Stage 
+Backend completed
