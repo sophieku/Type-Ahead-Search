@@ -14,10 +14,8 @@ public class KeywordSearch {
 
 		int i = 0;
 		int j = 0;
-		ArrayList<Integer> returnList = new ArrayList<Integer>();
-
 		int x,y;
-
+		ArrayList<Integer> returnList = new ArrayList<Integer>();
 
 		while ((!l1.isEmpty() && !l2.isEmpty())  && ((i < l1.size()) && (j < l2.size()))) {
 
@@ -216,23 +214,24 @@ public class KeywordSearch {
 
 		}
 		
-		System.out.println("The final list is currently: " + finalList);
+		System.out.println("The unranked list is: " + finalList);
 		System.out.println();
 		
 		ArrayList<Integer> rankedList = k.rankDocuments(keywords, finalList, t, i);
 		Collections.reverse(rankedList);
+		System.out.println();
 		System.out.println("The ranked list is currently: " + rankedList);
 		System.out.println();
 
 		
 		System.out.println("Search Results: Titles of related articles located below.");
+		System.out.println();
 		for (int n = 0; n <= rankedList.size() - 1; n++) {
 			int docNum = rankedList.get(n);
 			String articleTitle = i.articleTitleIndexToID.get(docNum);
 
 			System.out.println(articleTitle);
 		}
-
 	}
 }
 
@@ -250,8 +249,5 @@ class sortByScore implements Comparator<Pair<Integer, Double>>  {
 		} else {
 			return 0;
 		}
-		
 	}
-	
- 
 }

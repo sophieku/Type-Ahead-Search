@@ -116,18 +116,6 @@ public class InvertedIndex {
 		} 
 		return docList;
 
-
-		/*
-		if (KeyWordsTable.containsKey(word)) {
-			System.out.println("The word " + word + " is in the documents: "); // for debugging
-			List<Pair <Integer, Integer> > docs = KeyWordsTable.get(word);
-			for (int idx = 0; idx <= docs.size() - 1; idx++) {
-				System.out.print("(" + docs.get(idx).getFirst() + ", " + docs.get(idx).getSecond() + "), ");
-			}
-			System.out.println();
-		}
-		 */
-
 	}
 
 	/*
@@ -155,41 +143,6 @@ public class InvertedIndex {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
 
-		//i.printTable(); // helpful for debugging
-
-		/*InvertedIndex i = new InvertedIndex();
-
-		i.parse();
-
-		/*
-		// getting user input as String inputString
-		String inputString; 
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Search the Medline Database: "); 
-		inputString = sc.nextLine();  
-		sc.close();
-		 */
-
-		//String [] keywords = inputString.split("\\W+");
-
-
-		//creating Trie using insert method on the keys of the KeyWordsTable
-		/* Trie t = new Trie();
-		String str;
-		Set<String> keys = i.KeyWordsTable.keySet();
-		Iterator<String> itr = keys.iterator();
-		while (itr.hasNext()) {
-			str = itr.next();
-			t.insert(str);
-		}
-		t.CreateKeywordArray();
-
-
-		/*System.out.println(t.kwArray);
-		//t.search(inputString);
-		// Testing the Trie
-		System.out.println(t.findCompletedWordsInTrie(inputString));
-		 */
 
 	}
 }

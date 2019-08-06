@@ -15,15 +15,14 @@ public class Trie {
 	{ 
 		TrieNode[] children = new TrieNode[ALPHABET_SIZE]; 
 
-		// isEndOfWord is true if the node represents 
-		// end of a word 
-		boolean isEndOfWord; 
+		
 		int rng_start, rng_end;
+		
+		// A word is a complete word if the variable completedWord is not "". 
 		String completedWord = "";
 		
 
 		TrieNode(){ 
-			isEndOfWord = false; 
 			for (int i = 0; i < ALPHABET_SIZE; i++) 
 				children[i] = null; 
 		} 
@@ -90,14 +89,6 @@ public class Trie {
 			pCrawl = pCrawl.children[index]; 
 		} 
 		
-		// Printing kwArray values for testing
-		/*System.out.println("Start index: " + pCrawl.rng_start);
-		System.out.println("End index: " + pCrawl.rng_end);
-		System.out.println("Completed Words: ");
-		for (int i = pCrawl.rng_start; i < pCrawl.rng_end; i++) {
-			System.out.print(", " + kwArray.get(i));
-		}
-		*/
 		
 		return (pCrawl != null && pCrawl.completedWord != ""); 
 	} 
